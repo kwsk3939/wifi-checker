@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>学内Wi-Fi診断</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .result {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>学内Wi-Fi診断ページ</h1>
+  <p class="result">診断中...</p>
+
+  <script>
+    fetch("/check")
+      .then(response => response.json())
+      .then(data => {
+        const resultElem = document.querySelector(".result");
+        if (data.connectedToCampus) {
+          resultElem.textContent = `✅ 学内Wi-Fiに接続しています（IP: ${data.ip}）`;
+          resultElem.style.color = "green";
+        } else {
+          resultElem.textContent = `❌ 学内Wi-Fiではありません（IP: ${data.ip}）`;
+          resultElem.style.color = "red";
+        }
+      })
+      .catch(err => {
+        document.querySelector(".result").textContent = "診断エラー。もう一度試してください。";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
